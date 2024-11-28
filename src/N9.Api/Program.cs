@@ -1,12 +1,9 @@
 using Azure.Identity;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
-using Microsoft.Identity.Abstractions;
-using Microsoft.Identity.Web.Resource;
-using N9.Data;
+using N9.Data.Context;
 using Polly;
 using Polly.Retry;
 using Scalar.AspNetCore;
@@ -16,10 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Add Http logging
-builder.Services.AddHttpLogging(options =>
-{
-    options.LoggingFields = HttpLoggingFields.All;
-});
+builder.Services.AddHttpLogging(options => { options.LoggingFields = HttpLoggingFields.All; });
 
 // Add Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -52,11 +46,9 @@ builder.Services.AddOpenApi();
 
 // Add Azure Key Vault
 if (builder.Environment.IsProduction())
-{
     builder.Configuration.AddAzureKeyVault(
         new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
         new DefaultAzureCredential());
-}
 
 builder.Services
     .AddDbContext<BooksDbContext>(options =>

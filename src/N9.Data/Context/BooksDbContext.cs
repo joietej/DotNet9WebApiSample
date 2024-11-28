@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using N9.Data.Entities;
 
-namespace N9.Data;
+namespace N9.Data.Context;
 
 public class BooksDbContext : DbContext
 {

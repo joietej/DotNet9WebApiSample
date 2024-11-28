@@ -1,6 +1,6 @@
 ﻿namespace N9.Data.Entities;
 
-public class Author
+public class Author : IEntity
 {
     public int Id { get; set; }
     public required string FirstName { get; set; }
