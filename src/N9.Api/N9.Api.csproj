@@ -44,4 +44,9 @@
       <Folder Include="Services\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\N9.Data\N9.Data.csproj" />
+      <ProjectReference Include="..\N9.Services\N9.Services.csproj" />
+    </ItemGroup>
+
 </Project>

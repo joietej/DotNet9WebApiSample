@@ -2,9 +2,11 @@ using Azure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web.Resource;
+using N9.Data;
 using Polly;
 using Polly.Retry;
 using Scalar.AspNetCore;
@@ -55,6 +57,11 @@ if (builder.Environment.IsProduction())
         new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
         new DefaultAzureCredential());
 }
+
+builder.Services
+    .AddDbContext<BooksDbContext>(options =>
+        options
+            .UseSqlServer(builder.Configuration.GetConnectionString("Sql")));
 
 var app = builder.Build();
 
