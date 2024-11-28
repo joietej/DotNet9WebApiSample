@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using N9.Api.Apis;
+using N9.Api.Extensions;
 using N9.Data.Context;
 using Polly;
 using Polly.Retry;
@@ -11,6 +13,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.AddConfig();
 
 // Add Http logging
 builder.Services.AddHttpLogging(options => { options.LoggingFields = HttpLoggingFields.All; });
@@ -53,7 +56,8 @@ if (builder.Environment.IsProduction())
 builder.Services
     .AddDbContext<BooksDbContext>(options =>
         options
-            .UseSqlServer(builder.Configuration.GetConnectionString("Sql")));
+            .UseSqlServer(builder.Configuration.GetConnectionString("Sql"))
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
 var app = builder.Build();
 
@@ -67,5 +71,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpLogging();
 app.UseHttpsRedirection();
 app.UseCors();
+
+// map routes
+app.MapBooksApi();
 
 app.Run();
