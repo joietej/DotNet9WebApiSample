@@ -9,6 +9,7 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using N9.Api.Apis;
 using N9.Api.Extensions;
+using N9.Api.GraphQL;
 using N9.Data.Context;
 using N9.Services.Models;
 using Polly;
@@ -68,33 +69,37 @@ builder.Services
             .UseSqlServer(builder.Configuration.GetConnectionString("Sql"))
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
+builder.Services.AddGraphQLServer()
+    .AddQueryType<Query>()
+    .AddFiltering()
+    .AddSorting();
+
 var app = builder.Build();
 
 // Error handling
-app.UseStatusCodePages(async statusCodeContext 
+app.UseStatusCodePages(async statusCodeContext
     => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
         .ExecuteAsync(statusCodeContext.HttpContext));
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options => { options.WithEndpointPrefix("/api-docs/{documentName}"); });
 }
 else
 {
     app.UseExceptionHandler(a => { a.Run(async (ctx) => await Results.Problem().ExecuteAsync(ctx)); });
 }
 
-app.MapOpenApi();
-app.MapScalarApiReference(options =>
-{
-    options.WithEndpointPrefix("/api-docs/{documentName}");
-});
 
 app.UseHttpLogging();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGraphQL();
 
 // Map routes
 app.MapBooksApi();
