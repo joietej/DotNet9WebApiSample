@@ -1,4 +1,7 @@
+using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json;
 using Azure.Identity;
+using MailKit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +9,7 @@ using Microsoft.Identity.Web;
 using N9.Api.Apis;
 using N9.Api.Extensions;
 using N9.Data.Context;
+using N9.Services.Models;
 using Polly;
 using Polly.Retry;
 using Scalar.AspNetCore;
@@ -14,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.AddConfig();
+
+builder.Services.AddProblemDetails();
 
 // Add Http logging
 builder.Services.AddHttpLogging(options => { options.LoggingFields = HttpLoggingFields.All; });
@@ -49,9 +55,11 @@ builder.Services.AddOpenApi();
 
 // Add Azure Key Vault
 if (builder.Environment.IsProduction())
-    builder.Configuration.AddAzureKeyVault(
-        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
-        new DefaultAzureCredential());
+{
+    // builder.Configuration.AddAzureKeyVault(
+    //     new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+    //     new DefaultAzureCredential());
+}
 
 builder.Services
     .AddDbContext<BooksDbContext>(options =>
@@ -61,12 +69,21 @@ builder.Services
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseStatusCodePages(async statusCodeContext 
+    => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
+        .ExecuteAsync(statusCodeContext.HttpContext));
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(options => options.WithEndpointPrefix("/api-docs/{documentName}"));
+    app.UseDeveloperExceptionPage();
 }
+else
+{
+    app.UseExceptionHandler(a => { a.Run(async (ctx) => await Results.Problem().ExecuteAsync(ctx)); });
+}
+
+app.MapOpenApi();
+app.MapScalarApiReference(options => options.WithEndpointPrefix("/api-docs/{documentName}"));
 
 app.UseHttpLogging();
 app.UseHttpsRedirection();
@@ -74,5 +91,7 @@ app.UseCors();
 
 // map routes
 app.MapBooksApi();
+
+app.MapGet("/error", () => JsonSerializer.Deserialize<BookModel>(@"{""Title"": ""Foo""}"));
 
 app.Run();
