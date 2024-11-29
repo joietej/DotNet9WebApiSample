@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using N9.Api.Apis;
 using N9.Api.Extensions;
 using N9.Data.Context;
@@ -51,14 +52,14 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
     .AllowAnyMethod()));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApiWithSecurityScheme();
 
 // Add Azure Key Vault
 if (builder.Environment.IsProduction())
 {
-    // builder.Configuration.AddAzureKeyVault(
-    //     new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
-    //     new DefaultAzureCredential());
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+        new DefaultAzureCredential());
 }
 
 builder.Services
@@ -69,6 +70,7 @@ builder.Services
 
 var app = builder.Build();
 
+// Error handling
 app.UseStatusCodePages(async statusCodeContext 
     => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
         .ExecuteAsync(statusCodeContext.HttpContext));
@@ -83,15 +85,18 @@ else
 }
 
 app.MapOpenApi();
-app.MapScalarApiReference(options => options.WithEndpointPrefix("/api-docs/{documentName}"));
+app.MapScalarApiReference(options =>
+{
+    options.WithEndpointPrefix("/api-docs/{documentName}");
+});
 
 app.UseHttpLogging();
 app.UseHttpsRedirection();
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
-// map routes
+// Map routes
 app.MapBooksApi();
-
-app.MapGet("/error", () => JsonSerializer.Deserialize<BookModel>(@"{""Title"": ""Foo""}"));
 
 app.Run();

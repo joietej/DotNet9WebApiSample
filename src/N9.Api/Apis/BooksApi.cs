@@ -11,7 +11,8 @@ public static class BooksApi
         group.MapGet("/", async (IBooksService booksService) => await booksService.GetBooksAsync())
             .WithOpenApi()
             .WithName("GetBooks")
-            .WithDescription("Get all books");
+            .WithDescription("Get all books")
+            .RequireAuthorization();
 
         return group;
     }
