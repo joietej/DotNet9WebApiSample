@@ -11,7 +11,7 @@ public static class BookMappings
         {
             Id = book.Id,
             Title = book.Title,
-            Author = book.Author.ToModel()
+            Author = book.Author?.ToModel()
         };
     }
 }

@@ -11,6 +11,16 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "http-prod": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "api-docs/v1",
+      "applicationUrl": "http://localhost:5295",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,

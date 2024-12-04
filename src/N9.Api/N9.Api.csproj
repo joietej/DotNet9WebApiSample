@@ -9,8 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="14.1.0" />
-        <PackageReference Include="HotChocolate.Data" Version="14.1.0" />
+        <PackageReference Include="HotChocolate.AspNetCore" Version="14.1.0"/>
+        <PackageReference Include="HotChocolate.Data" Version="14.1.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" NoWarn="NU1605"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0" NoWarn="NU1605"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>

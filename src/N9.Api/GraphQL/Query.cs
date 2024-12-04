@@ -7,6 +7,8 @@ public class Query
 {
     [UseFiltering]
     [UseSorting]
-    public async Task<IQueryable<BookModel>> GetBooks([Service] IBooksService booksService) =>
-        (await booksService.GetBooksAsync()).AsQueryable();
+    public async Task<IQueryable<BookModel>> GetBooks([Service] IBooksService booksService)
+    {
+        return (await booksService.GetBooksAsync()).AsQueryable();
+    }
 }

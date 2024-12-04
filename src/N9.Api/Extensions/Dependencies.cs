@@ -1,4 +1,5 @@
 ﻿using N9.Api.Services;
+using N9.Data.Init;
 using N9.Data.Repositories;
 using N9.Services;
 
@@ -8,6 +9,7 @@ public static class Dependencies
 {
     public static WebApplicationBuilder AddConfig(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<IDbInitializer, DbInitializer>();
         builder.Services.AddScoped<IBookRepository, BookRepository>();
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 

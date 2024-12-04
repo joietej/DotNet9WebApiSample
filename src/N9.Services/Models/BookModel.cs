@@ -4,5 +4,5 @@ public record BookModel
 {
     public required int Id { get; init; }
     public required string Title { get; init; }
-    public required AuthorModel Author { get; init; }
+    public AuthorModel? Author { get; init; }
 }
