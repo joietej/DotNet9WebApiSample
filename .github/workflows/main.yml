@@ -51,7 +51,7 @@ jobs:
         run: dotnet publish '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{env.WEB_PROJECT}}' \
           --configuration ${{ env.BUILD_CONFIG }} \
           --no-restore \
-          --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+          --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
