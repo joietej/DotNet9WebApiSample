@@ -9,7 +9,6 @@ on:
       - master
 
 env:
-  SOLUTION: '**/*.sln'
   BUILD_CONFIG: 'Release'
   APP_NAME: 'poc-cporal-api-dev-app'
   AZURE_WEBAPP_PACKAGE_PATH: '.'
@@ -29,10 +28,10 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Restore NuGet Packages
-        run: dotnet restore ${{ env.SOLUTION }}
+        run: dotnet restore
 
       - name: Build
-        run: dotnet build ${{ env.SOLUTION }} --configuration ${{ env.BUILD_CONFIG }} --no-restore
+        run: dotnet build --configuration ${{ env.BUILD_CONFIG }} --no-restore
 
       - name: Run Tests
         run: |
@@ -48,7 +47,7 @@ jobs:
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/**/*.cobertura.xml
 
       - name: Publish
-        run: dotnet publish ${{ env.SOLUTION }} \
+        run: dotnet publish \
           --configuration ${{ env.BUILD_CONFIG }} \
           --no-restore \
           --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp
