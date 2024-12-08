@@ -12,6 +12,7 @@ env:
   BUILD_CONFIG: 'Release'
   APP_NAME: 'poc-cporal-api-dev-app'
   AZURE_WEBAPP_PACKAGE_PATH: '.'
+  WEB_PROJECT: 'src/N9.WebApi'
 
 jobs:
   build:
@@ -47,7 +48,7 @@ jobs:
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/**/*.cobertura.xml
 
       - name: Publish
-        run: dotnet publish './*.sln' \
+        run: dotnet publish '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/ ${{env.WEB_PROJECT}}' \
           --configuration ${{ env.BUILD_CONFIG }} \
           --no-restore \
           --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'

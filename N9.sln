@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N9.Api", "src\N9.Api\N9.Api.csproj", "{D8489DEF-4B08-43F2-B67D-1AAA8D2B87AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N9.WebApi", "src\N9.WebApi\N9.WebApi.csproj", "{D8489DEF-4B08-43F2-B67D-1AAA8D2B87AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N9.Data", "src\N9.Data\N9.Data.csproj", "{41B5D926-7217-4359-9682-FA2F49494F2C}"
 EndProject

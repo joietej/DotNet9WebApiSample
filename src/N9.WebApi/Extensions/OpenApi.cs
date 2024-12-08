@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace N9.Api.Extensions;
+namespace N9.WebApi.Extensions;
 
 public static class OpenApi
 {

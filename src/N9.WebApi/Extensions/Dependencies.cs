@@ -1,9 +1,9 @@
-﻿using N9.Api.Services;
-using N9.Data.Init;
+﻿using N9.Data.Init;
 using N9.Data.Repositories;
 using N9.Services;
+using N9.WebApi.Services;
 
-namespace N9.Api.Extensions;
+namespace N9.WebApi.Extensions;
 
 public static class Dependencies
 {

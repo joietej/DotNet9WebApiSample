@@ -1,6 +1,6 @@
 ﻿using N9.Services;
 
-namespace N9.Api.Apis;
+namespace N9.WebApi.Apis;
 
 public static class BooksApi
 {

@@ -1,7 +1,7 @@
 ﻿using N9.Services;
 using N9.Services.Models;
 
-namespace N9.Api.GraphQL;
+namespace N9.WebApi.GraphQL;
 
 public class Query
 {
