@@ -1,0 +1,78 @@
+name: pl-cportal-webapi
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  solution: '**/*.sln'
+  buildConfiguration: 'Release'
+  artifactName: 'webapi'
+
+jobs:
+  build:
+    name: Prepare/Build Artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.x'
+
+      - name: Restore NuGet Packages
+        run: dotnet restore ${{ env.solution }}
+
+      - name: Build
+        run: dotnet build ${{ env.solution }} --configuration ${{ env.buildConfiguration }} --no-restore
+
+      - name: Run Tests
+        run: |
+          dotnet test '**/tests/**/*.csproj' \
+            --configuration ${{ env.buildConfiguration }} \
+            /p:ExcludeByFile="**/*Migrations/*cs" \
+            --collect:"Code Coverage;Format=cobertura"
+
+      - name: Publish Code Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: $(Agent.TempDirectory)/**/*.cobertura.xml
+
+      - name: Publish
+        run: dotnet publish ${{ env.solution }} \
+          --configuration ${{ env.buildConfiguration }} \
+          --no-restore \
+          --output ./artifact
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.artifactName }}
+          path: ./artifact
+
+  deploy:
+    name: Deploy Artifacts
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.artifactName }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: poc-cporal-api-dev-app
+          slot-name: production
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./artifact/**/*.zip
