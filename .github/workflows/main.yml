@@ -34,8 +34,7 @@ jobs:
         run: dotnet build --configuration ${{ env.BUILD_CONFIG }} --no-restore
 
       - name: Run Tests
-        run: |
-          dotnet test '**/tests/**/*.csproj' \
+        run: dotnet test \
             --configuration ${{ env.BUILD_CONFIG }} \
             /p:ExcludeByFile="**/*Migrations/*cs" \
             --collect:"Code Coverage;Format=cobertura"
