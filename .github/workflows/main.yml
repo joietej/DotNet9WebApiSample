@@ -1,4 +1,4 @@
-name: pl-cportal-webapi
+name: CI/CD
 
 on:
   push:
