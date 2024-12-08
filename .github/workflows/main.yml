@@ -48,7 +48,8 @@ jobs:
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/**/*.cobertura.xml
 
       - name: Publish
-        run: dotnet publish '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{env.WEB_PROJECT}}' \
+        run: |
+          dotnet publish '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/${{env.WEB_PROJECT}}' \
           --configuration ${{ env.BUILD_CONFIG }} \
           --no-restore \
           --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp
